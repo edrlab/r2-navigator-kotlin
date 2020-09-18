@@ -37,7 +37,7 @@ import org.readium.r2.shared.publication.ReadingProgression
 open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(context, attrs) {
 
     lateinit var listener: Listener
-    lateinit var navigator: Navigator
+    lateinit var navigator: VisualNavigator
 
     var progression: Double = 0.0
     var overrideUrlLoading = true
@@ -75,18 +75,18 @@ open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(conte
             listener.onScroll()
 
             if (scrollMode) {
-                if (listener.readingProgression == ReadingProgression.RTL) {
+                if (navigator.readingProgression == ReadingProgression.RTL) {
                     this@R2BasicWebView.evaluateJavascript("scrollRightRTL();") { result ->
                         if (result.contains("edge")) {
-                            listener.goBackward(animated = animated)
+                            navigator.goBackward(animated = animated)
                         }
                     }
                 } else {
-                    listener.goForward(animated = animated)
+                    navigator.goForward(animated = animated)
                 }
             } else {
                 if (!this@R2BasicWebView.canScrollHorizontally(1)) {
-                    listener.goForward(animated = animated)
+                    navigator.goRight(animated = animated)
                 }
                 this@R2BasicWebView.evaluateJavascript("scrollRight();", null)
             }
@@ -99,20 +99,24 @@ open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(conte
             listener.onScroll()
 
             if (scrollMode) {
-                if (listener.readingProgression == ReadingProgression.RTL) {
+                if (navigator.readingProgression == ReadingProgression.RTL) {
                     this@R2BasicWebView.evaluateJavascript("scrollLeftRTL();") { result ->
                         if (result.contains("edge")) {
-                            listener.goForward(animated = animated)
+                            navigator.goForward(animated = animated)
                         }
                     }
                 } else {
-                    listener.goBackward(animated = animated)
+                    navigator.goBackward(animated = animated)
                 }
             } else {
                 if (!this@R2BasicWebView.canScrollHorizontally(-1)) {
-                    listener.goBackward(animated = animated)
+                    navigator.goLeft(animated = animated)
                 }
-                this@R2BasicWebView.evaluateJavascript("scrollLeft();", null)
+                // This is a temporary fix to prevent the webview from snapping to the beginning
+                // of the resource when paging between them in RTL layouts
+                if (navigator.readingProgression == ReadingProgression.LTR) {
+                    this@R2BasicWebView.evaluateJavascript("scrollLeft();", null)
+                }
             }
         }
     }
@@ -217,7 +221,7 @@ open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(conte
     }
 
     fun scrollToPosition(progression: Double) {
-        this.evaluateJavascript("scrollToPosition(\"$progression\", \"${listener.readingProgression.value}\");", null)
+        this.evaluateJavascript("scrollToPosition(\"$progression\", \"${navigator.readingProgression.value}\");", null)
     }
 
     fun setScrollMode(scrollMode: Boolean) {
@@ -283,7 +287,6 @@ open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(conte
     }
 
     interface Listener {
-        val readingProgression: ReadingProgression
         fun onPageLoaded()
         fun onPageChanged(pageIndex: Int, totalPages: Int, url: String)
         fun onPageEnded(end: Boolean)
@@ -292,7 +295,5 @@ open class R2BasicWebView(context: Context, attrs: AttributeSet) : WebView(conte
         fun onProgressionChanged(progression: Double)
         fun onHighlightActivated(id: String)
         fun onHighlightAnnotationMarkActivated(id: String)
-        fun goForward(animated: Boolean = false, completion: () -> Unit = {}): Boolean
-        fun goBackward(animated: Boolean = false, completion: () -> Unit = {}): Boolean
     }
 }

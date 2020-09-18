@@ -22,6 +22,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ open class R2CbzActivity : AppCompatActivity(), CoroutineScope, IR2Activity, Vis
         get() = Dispatchers.Main
 
     override lateinit var preferences: SharedPreferences
-    override lateinit var resourcePager: R2ViewPager
+    override lateinit var resourcePager: ViewPager2
     override lateinit var publicationPath: String
     override lateinit var publication: Publication
     override lateinit var publicationIdentifier: String

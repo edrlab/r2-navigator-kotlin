@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.*
 import org.readium.r2.navigator.Navigator
 import org.readium.r2.navigator.R
@@ -36,7 +37,7 @@ class ImageNavigatorFragment(
 ) : Fragment(), CoroutineScope by MainScope(), VisualNavigator {
 
     internal lateinit var positions: List<Locator>
-    internal lateinit var resourcePager: R2ViewPager
+    internal lateinit var resourcePager: ViewPager2
 
     internal lateinit var preferences: SharedPreferences
 
@@ -55,17 +56,16 @@ class ImageNavigatorFragment(
 
         preferences = requireContext().getSharedPreferences("org.readium.r2.settings", Context.MODE_PRIVATE)
         resourcePager = view.findViewById(R.id.resourcePager)
-        resourcePager.type = Publication.TYPE.CBZ
 
         positions = runBlocking { publication.positions() }
 
-        resourcePager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        resourcePager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 notifyCurrentLocation()
             }
         })
 
-        adapter = R2PagerAdapter(currentActivity.supportFragmentManager, publication.readingOrder, publication.metadata.title, Publication.TYPE.CBZ)
+        adapter = R2PagerAdapter(currentActivity.supportFragmentManager, lifecycle, publication.readingOrder, publication.metadata.title, Publication.TYPE.CBZ)
 
         resourcePager.adapter = adapter
 

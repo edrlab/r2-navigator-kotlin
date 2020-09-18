@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import android.graphics.PointF
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.viewpager2.widget.ViewPager2
 import org.readium.r2.navigator.pager.R2ViewPager
 import org.readium.r2.shared.publication.Link
 import org.readium.r2.shared.publication.Locator
@@ -27,7 +28,7 @@ interface IR2Activity {
     val publicationFileName: String
     val publicationPath: String
     val bookId: Long
-    val resourcePager: R2ViewPager?
+    val resourcePager: ViewPager2?
         get() = null
     val allowToggleActionBar: Boolean
         get() = true
