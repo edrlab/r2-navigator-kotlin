@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="r2_title" type="id" />
+    <item name="r2_coverView" type="id" />
+    <item name="r2_play" type="id" />
+    <item name="r2_pause" type="id" />
+    <item name="r2_playPause" type="id" />
+    <item name="r2_previous" type="id" />
+    <item name="r2_next" type="id" />
+    <item name="r2_skipBackward" type="id" />
+    <item name="r2_skipForward" type="id" />
+    <item name="r2_timeline" type="id" />
+    <item name="r2_timelineBar" type="id" />
+    <item name="r2_timelinePosition" type="id" />
+    <item name="r2_timelineDuration" type="id" />
+</resources>

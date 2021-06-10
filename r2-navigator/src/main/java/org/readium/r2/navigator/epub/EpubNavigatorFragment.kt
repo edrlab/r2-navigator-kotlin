@@ -21,7 +21,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.readium.r2.navigator.NavigatorDelegate
-import org.readium.r2.navigator.R
 import org.readium.r2.navigator.R2BasicWebView
 import org.readium.r2.navigator.VisualNavigator
 import org.readium.r2.navigator.databinding.ActivityR2ViewpagerBinding
@@ -48,7 +47,7 @@ import kotlin.math.ceil
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class EpubNavigatorFragment private constructor(
-    internal val publication: Publication,
+    override val publication: Publication,
     private val baseUrl: String,
     private val initialLocator: Locator? = null,
     internal val listener: Listener? = null
